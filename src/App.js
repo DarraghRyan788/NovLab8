@@ -7,6 +7,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container  from 'react-bootstrap/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Nav from 'react-bootstrap/Nav';
+import { Read } from './components/Read';
+import { Create } from './components/Create';
 
 import {
    BrowserRouter as Router,
@@ -19,6 +21,7 @@ class App extends React.Component {
   render() {
     return (
       <Router>
+        {/* nav bar */}
       <div className="App">
         <Navbar bg="dark" variant="dark">
         <Container>
@@ -31,9 +34,10 @@ class App extends React.Component {
         </Container>
       </Navbar>
       <Routes>
+        {/* Linking to other pages */}
         <Route path='/' element = {<Content></Content>}></Route>
-        <Route path='/read' element = {<Header></Header>}></Route>
-        <Route path='/create' element = {<Footer></Footer>}></Route>
+        <Route path='/read' element = {<Read></Read>}></Route>
+        <Route path='/create' element = {<Create></Create>}></Route>
       </Routes>
 
       {/* <Header></Header>
