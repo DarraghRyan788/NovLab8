@@ -1,5 +1,5 @@
 import React from "react";
-
+import axios from "axios";
 export class Create extends React.Component{
     constructor(){
         super();
@@ -24,6 +24,16 @@ export class Create extends React.Component{
         console.log(`${this.state.cover}`);
         console.log(`${this.state.author}`);
         console.log(`${this.state.url}`);
+
+        const book = {
+            title: this.state.title,
+            cover: this.state.cover,
+            author: this.state.author
+        }
+
+        axios.post('http://localhost:4000/api/books',book)
+        .then()
+        .catch();
     }
 
     //This will update book title
@@ -86,7 +96,7 @@ export class Create extends React.Component{
                         <label>Add Book Author: </label>
                         <input type="text"
                         className="form-control"
-                        value={this.state.cover}
+                        value={this.state.author}
                         onChange={this.onChangeBookAuthor}
 
                         />
