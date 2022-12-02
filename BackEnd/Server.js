@@ -20,6 +20,25 @@ app.use(function(req, res, next) {
     next();
 });
 
+const mongoose = require('mongoose');
+
+main().catch(err => console.log(err));
+//reading in the mongodb
+async function main() {
+  await mongoose.connect('mongodb+srv://admin1:admin@cluster0.my5ieok.mongodb.net/?retryWrites=true&w=majority');
+  
+  // use `await mongoose.connect('mongodb://user:password@localhost:27017/test');` if your database has auth enabled
+}
+
+const bookSchema = new mongoose.Schema({
+    title: String,
+    cover: String,
+    author: String
+  });
+  
+  const bookModel = mongoose.model('ReadBooks', bookSchema);
+
+
 //get hello world to display
 app.get('/', (req, res) => {
     res.send('Hello World!')
@@ -27,54 +46,30 @@ app.get('/', (req, res) => {
 
 app.post('/api/books',(req,res)=>{
     console.log(req.body);
-    res.send('Data Received')
-})
-
-//get the list of books
-app.get('/api/books', (req, res)=>{
-    const books = [
-        {
-            "title": "Learn Git in a Month of Lunches",
-            "isbn": "1617292419",
-            "pageCount": 0,
-            "thumbnailUrl":"https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/umali.jpg",
-            "status": "MEAP",
-            "authors": ["Rick Umali"],
-            "categories": []
-        },
-        {
-            "title": "MongoDB in Action, Second Edition",
-            "isbn": "1617291609",
-            "pageCount": 0,
-            "thumbnailUrl":"https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/banker2.jpg",
-            "status": "MEAP",
-            "authors": [
-            "Kyle Banker",
-            "Peter Bakkum",
-            "Tim Hawkins",
-            "Shaun Verch",
-            "Douglas Garrett"
-            ],
-            "categories": []
-        },
-        {
-                "title": "Getting MEAN with Mongo, Express, Angular, and Node",
-                "isbn": "1617292036",
-                "pageCount": 0,
-                "thumbnailUrl":"https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/sholmes.jpg",
-                "status": "MEAP",
-                "authors": ["Simon Holmes"],
-                "categories": []
-        }
-    ]
-
-    //responsds with the list of books
-    res.json({
-        myBooks:books 
+    //Post the schemas 
+    bookModel.create({
+      title: req.body.title,
+      cover: req.body.cover,
+      author: req.body.author
     })
-})
+    res.send('Data Recieved');
+  })
 
-//listening on port stated above
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+//Find Id books
+app.get('/api/books', (req, res) => {
+    bookModel.find((error, data) => {
+     res.json(data);
+    })
+   })
+   //Get data searching the unique ID return data
+   app.get('/api/book/:id', (req,res)=>{
+     console.log(req.params.id)
+     bookModel.findById(req.params.id,(error,data)=>{
+       res.json(data);
+     })
+     res.send('data');
+   })
+   
+   app.listen(port, () => {
+     console.log(`Example app listening on port ${port}`)
+   })
